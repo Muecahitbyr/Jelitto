@@ -265,7 +265,7 @@ export default function KlassePage() {
       {/* Galerie */}
       {item.gallery?.map((g) => (
         <section key={g.src} className="tone-white pt-24 md:pt-32">
-          <ZoomMedia src={g.src} alt={g.alt} height="h-[60svh] md:h-[85svh]" />
+          <ZoomMedia src={g.src} alt={g.alt} height="aspect-[4/3] md:aspect-auto md:h-[85svh]" />
           {g.caption && (
             <div className="wrap">
               <p className="text-muted mt-5 text-[15px]">{g.caption}</p>

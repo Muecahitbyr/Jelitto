@@ -1,5 +1,5 @@
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react"
-import { useRef, type ReactNode } from "react"
+import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react"
+import { useEffect, useRef, type ReactNode } from "react"
 import { cn } from "~/lib/cn"
 
 /**
@@ -11,7 +11,8 @@ export function ZoomMedia({
   alt,
   position,
   className,
-  height = "h-[70svh] md:h-[92svh]",
+  /** Mobil über das Seitenverhältnis (Fotos bleiben im Querformat), ab Tablet über die Bildschirmhöhe */
+  height = "aspect-[4/3] md:aspect-auto md:h-[92svh]",
   children,
   priority,
 }: {
@@ -29,7 +30,15 @@ export function ZoomMedia({
   const inset = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["9%", "0%"])
   const radius = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [36, 0])
   const clipPath = useTransform(() => `inset(0 ${inset.get()} round ${radius.get()}px)`)
-  const imgScale = useTransform(scrollYProgress, [0, 1], reduce ? [1, 1] : [1.3, 1])
+  // Auf dem Handy weniger hineinzoomen, damit vom Motiv mehr zu sehen ist
+  const zoom = useMotionValue(1.3)
+  useEffect(() => {
+    const set = () => zoom.set(window.innerWidth < 768 ? 1.1 : 1.3)
+    set()
+    window.addEventListener("resize", set)
+    return () => window.removeEventListener("resize", set)
+  }, [zoom])
+  const imgScale = useTransform([scrollYProgress, zoom], ([p, z]: number[]) => (reduce ? 1 : z - (z - 1) * p))
 
   return (
     <div ref={ref} className={cn("relative", className)}>

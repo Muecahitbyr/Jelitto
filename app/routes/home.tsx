@@ -203,7 +203,7 @@ export default function Home() {
             </Heading>
           </Reveal>
         </div>
-        <ZoomMedia src={teamPhoto.src} alt={teamPhoto.alt} className="mt-16 md:mt-24" height="h-[62svh] md:h-[88svh]" position="center 35%" />
+        <ZoomMedia src={teamPhoto.src} alt={teamPhoto.alt} className="mt-16 md:mt-24" height="aspect-[3/2] md:aspect-auto md:h-[88svh]" position="center 35%" />
         <div className="wrap py-14 md:py-20">
           <Stagger className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
             {team.map((m) => (

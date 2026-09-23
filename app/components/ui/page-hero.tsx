@@ -79,7 +79,7 @@ export function PageHero({
           </motion.div>
         )}
       </div>
-      <ZoomMedia src={image} alt={imageAlt} position={imagePosition} className="mt-16 md:mt-24" height="h-[58svh] md:h-[86svh]" priority />
+      <ZoomMedia src={image} alt={imageAlt} position={imagePosition} className="mt-16 md:mt-24" height="aspect-[4/3] md:aspect-auto md:h-[86svh]" priority />
     </header>
   )
 }

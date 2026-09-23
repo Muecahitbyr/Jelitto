@@ -132,7 +132,7 @@ export default function BegleitetesFahrenPage() {
         </div>
       </Section>
 
-      <ZoomMedia src="/images/stock/driver-window.webp" alt="Junge Fahrerin lächelt aus dem Autofenster" position="center 35%" height="h-[60svh] md:h-[80svh]" />
+      <ZoomMedia src="/images/stock/driver-window.webp" alt="Junge Fahrerin lächelt aus dem Autofenster" position="center 35%" height="aspect-[4/5] md:aspect-auto md:h-[80svh]" />
 
       {/* Zeitplan */}
       <Section id="zeitplan">
