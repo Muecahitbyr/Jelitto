@@ -1,0 +1,373 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "lenis/dist/lenis.css";
+
+/* ================================================================== */
+/*  Design-Tokens – helles Apple-Design in den Farben der Fahrschule  */
+/*  Weiß als Grundfläche, Grün & Gelb aus dem Jelitto-Logo als Akzent */
+/* ================================================================== */
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter Variable", "Helvetica Neue", Arial,
+    sans-serif;
+
+  /* Markenfarben aus dem Logo */
+  --color-brand: #f8d800; /* Gelb */
+  --color-green: #88b018; /* Logo-Grün – Flächen, Icons, große Schrift */
+  --color-green-deep: #4d7309; /* dunkleres Grün für Text auf Weiß (WCAG AA) */
+  --color-green-soft: #eef5dc;
+  --color-ink: #1d1d1f;
+
+  --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Farben laufen über CSS-Variablen, damit jede Sektion ihre Farbwelt umschalten kann */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-tile: var(--tile);
+  --color-tile-2: var(--tile-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+}
+
+:root,
+.tone-white {
+  --bg: #ffffff;
+  --tile: #f5f5f7;
+  --tile-2: #e8e8ed;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --line: rgb(0 0 0 / 0.1);
+  --accent: #4d7309;
+  --metal-a: #1d1d1f;
+  --metal-b: #58585d;
+  --brand-a: #97c41f;
+  --brand-b: #4d7309;
+  color-scheme: light;
+}
+
+.tone-light {
+  --bg: #f5f5f7;
+  --tile: #ffffff;
+  --tile-2: #e8e8ed;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --line: rgb(0 0 0 / 0.1);
+  --accent: #4d7309;
+  --metal-a: #1d1d1f;
+  --metal-b: #58585d;
+  --brand-a: #97c41f;
+  --brand-b: #4d7309;
+  color-scheme: light;
+}
+
+/* Zartes Grün für besondere Abschnitte */
+.tone-mint {
+  --bg: #f3f8e6;
+  --tile: #ffffff;
+  --tile-2: #e4efc9;
+  --fg: #1d1d1f;
+  --muted: #5d6452;
+  --line: rgb(77 115 9 / 0.16);
+  --accent: #4d7309;
+  --metal-a: #1d1d1f;
+  --metal-b: #4a5140;
+  --brand-a: #97c41f;
+  --brand-b: #4d7309;
+  color-scheme: light;
+}
+
+/* Nur für Text auf Fotos */
+.tone-dark {
+  --bg: #000000;
+  --tile: #161617;
+  --tile-2: #1d1d1f;
+  --fg: #f5f5f7;
+  --muted: #a1a1a6;
+  --line: rgb(255 255 255 / 0.16);
+  --accent: #c3e66a;
+  --metal-a: #ffffff;
+  --metal-b: #d2d2d7;
+  --brand-a: #d9f28f;
+  --brand-b: #9fd02a;
+  color-scheme: dark;
+}
+
+.tone-white,
+.tone-light,
+.tone-mint,
+.tone-dark {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+/* ================================================================== */
+/*  Basis                                                              */
+/* ================================================================== */
+
+@layer base {
+  html {
+    overflow-x: clip;
+    /* Platz für Haupt- und Unter-Navigation bei Sprungmarken */
+    scroll-padding-top: 112px;
+    background: #fff;
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: #fff;
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.012em;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    hyphens: manual;
+    overflow-wrap: break-word;
+  }
+
+  /* Nur auf schmalen Bildschirmen trennen, damit lange Komposita („Führerscheinklassen“) passen */
+  @media (width < 40rem) {
+    h1,
+    h2,
+    h3,
+    h4 {
+      hyphens: auto;
+    }
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* Einspaltige Raster (mobil) dürfen nie breiter als der Bildschirm werden –
+     grid-cols-*-Utilities überschreiben das automatisch, weil sie in einer höheren Ebene liegen */
+  [class~="grid"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-green);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+}
+
+/* ================================================================== */
+/*  Typografie im Apple-Stil                                           */
+/* ================================================================== */
+
+@utility display-xl {
+  font-size: clamp(3.25rem, 9vw, 8rem);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+@utility display-lg {
+  font-size: clamp(2.75rem, 6.4vw, 5.75rem);
+  line-height: 1.03;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+@utility display-md {
+  font-size: clamp(2.25rem, 4.6vw, 4rem);
+  line-height: 1.06;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+@utility display-sm {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+}
+
+@utility eyebrow {
+  font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--accent);
+}
+
+/* Apple-Absatz: grau & fett, wichtige Begriffe in <strong> leuchten weiß */
+@utility copy {
+  font-size: clamp(1.125rem, 1.7vw, 1.5rem);
+  line-height: 1.32;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--muted);
+  & strong,
+  & a {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  & a {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg) 35%, transparent);
+    text-underline-offset: 4px;
+  }
+}
+
+@utility body-copy {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--muted);
+  & strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  & a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg) 35%, transparent);
+    text-underline-offset: 4px;
+  }
+}
+
+@utility text-metal {
+  background-image: linear-gradient(180deg, var(--metal-a) 30%, var(--metal-b) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-sun {
+  background-image: linear-gradient(95deg, #fff3a3 0%, #f8d800 38%, #f5a300 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Grüner Verlauf aus dem Logo für Schlüsselwörter */
+@utility text-leaf {
+  background-image: linear-gradient(100deg, var(--brand-a) 0%, var(--brand-b) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Kräftiges Logo-Gelb für große Schrift auf Weiß (Verlauf + feine Kontur für Lesbarkeit) */
+@utility text-gold {
+  background-image: linear-gradient(100deg, #ffd900 0%, #f8d800 45%, #efb600 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(176 132 0 / 0.45);
+}
+
+/* Safari zeichnet Verlaufs-Text nicht durch animierte Wort-Spans hindurch –
+   deshalb erbt jedes Wort den Verlauf selbst */
+.text-metal .word,
+.text-leaf .word,
+.text-gold .word {
+  background-image: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-gold .word {
+  -webkit-text-stroke: inherit;
+}
+
+/* Gelber Textmarker – angelehnt an den gelben Schwung im Logo */
+@utility marker {
+  background-image: linear-gradient(transparent 60%, rgb(248 216 0 / 0.75) 60%, rgb(248 216 0 / 0.75) 90%, transparent 90%);
+  background-repeat: no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-inline: 0.06em;
+}
+
+/* ================================================================== */
+/*  Layout-Helfer                                                      */
+/* ================================================================== */
+
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1260px;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility wrap-narrow {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 880px;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility glass-nav {
+  background: rgb(255 255 255 / 0.8);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+@utility glass {
+  background: rgb(255 255 255 / 0.08);
+  -webkit-backdrop-filter: saturate(160%) blur(24px);
+  backdrop-filter: saturate(160%) blur(24px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Sanfter Lichtschein in Gelb/Grün */
+@utility glow {
+  background: radial-gradient(closest-side, rgb(248 216 0 / 0.45), rgb(136 176 24 / 0.22) 55%, transparent 100%);
+  filter: blur(50px);
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

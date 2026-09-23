@@ -1,0 +1,33 @@
+# Apache-Konfiguration für den statischen Build (build/client)
+Options -MultiViews
+DirectoryIndex index.html
+
+# Unbekannte URLs → 404-Seite der App (lädt die React-App, die dann „Seite nicht gefunden“ zeigt)
+ErrorDocument 404 /404.html
+
+# Alte WordPress-Adressen umleiten
+RedirectMatch 301 ^/wp-content/uploads/2019/08/Anmeldung\.pdf$ /downloads/Anmeldung.pdf
+RedirectMatch 301 ^/wp-content/uploads/2022/02/Begriffliste-fuer-Praktische-Pruefung\.pdf$ /downloads/Begriffliste-fuer-Praktische-Pruefung.pdf
+RedirectMatch 301 ^/feed/?$ /
+RedirectMatch 301 ^/klassen/b96/?$ /klassen
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
