@@ -6,11 +6,16 @@ export function Counter({ to, prefix = "", suffix = "", duration = 1.8 }: { to: 
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.8 })
   const reduce = useReducedMotion()
-  const value = useMotionValue(reduce ? to : 0)
+  // Immer mit 0 starten, damit vorgerendertes HTML und Browser übereinstimmen (sonst Hydration-Fehler)
+  const value = useMotionValue(0)
   const rounded = useTransform(value, (v) => Math.round(v).toString())
 
   useEffect(() => {
-    if (!inView || reduce) return
+    if (reduce) {
+      value.set(to)
+      return
+    }
+    if (!inView) return
     const controls = animate(value, to, { duration, ease: [0.16, 1, 0.3, 1] })
     return () => controls.stop()
   }, [inView, reduce, to, duration, value])

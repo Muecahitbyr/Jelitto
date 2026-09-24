@@ -25,10 +25,10 @@ export function FeatureSequence({ chapters, label }: { chapters: Chapter[]; labe
 
   return (
     <section ref={ref} aria-label={label} className="tone-light relative" style={{ height: `${chapters.length * 90 + 60}vh` }}>
-      <div className="sticky top-0 flex h-svh items-center overflow-hidden pt-12">
-        <div className="wrap grid items-center gap-8 md:grid-cols-12 md:gap-14">
+      <div className="sticky top-0 flex h-svh items-start overflow-hidden pt-[84px] md:items-center md:pt-16">
+        <div className="wrap grid items-center gap-5 md:grid-cols-12 md:gap-14">
           {/* Bildkarte */}
-          <div className="relative order-1 h-[40svh] overflow-hidden rounded-[32px] md:order-2 md:col-span-7 md:h-[72svh]">
+          <div className="relative order-1 h-[30svh] overflow-hidden rounded-[24px] md:rounded-[32px] [@media(max-height:540px)]:h-[20svh] md:order-2 md:col-span-7 md:h-[72svh]">
             {chapters.map((c, i) => (
               <motion.img
                 key={c.image}
@@ -59,12 +59,12 @@ export function FeatureSequence({ chapters, label }: { chapters: Chapter[]; labe
                 exit={{ opacity: 0, y: -20, filter: "blur(6px)" }}
                 transition={{ duration: 0.55, ease: easeOutExpo }}
               >
-                <p className="eyebrow mb-3">{chapter.eyebrow}</p>
-                <h3 className="display-md text-metal pb-[0.18em]">{chapter.title}</h3>
-                <div className="copy mt-5">{chapter.text}</div>
+                <p className="eyebrow mb-2 md:mb-3">{chapter.eyebrow}</p>
+                <h3 className="display-md text-metal pb-[0.18em] max-md:text-[1.85rem]">{chapter.title}</h3>
+                <div className="copy mt-3 max-md:text-[1rem] md:mt-5">{chapter.text}</div>
               </motion.div>
             </AnimatePresence>
-            <ol className="mt-10 flex gap-2" aria-hidden>
+            <ol className="mt-6 flex gap-2 md:mt-10" aria-hidden>
               {chapters.map((c, i) => (
                 <li key={c.title} className="bg-line h-[3px] flex-1 overflow-hidden rounded-full">
                   <span

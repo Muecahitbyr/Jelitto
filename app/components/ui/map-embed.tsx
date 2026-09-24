@@ -2,14 +2,18 @@ import { MapPin, Navigation } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"
 import { site } from "~/content/site"
+import { saveConsent, useConsent } from "~/lib/consent"
 import { cn } from "~/lib/cn"
 
 /**
- * Google Maps mit 2-Klick-Lösung: Die Karte wird erst nach Zustimmung geladen,
- * vorher fließen keine Daten an Google (DSGVO).
+ * Google Maps nur mit Einwilligung: Wurde „Google Maps“ in den Datenschutz-Einstellungen
+ * erlaubt, lädt die Karte direkt. Sonst erst nach Klick (einmalig oder „immer erlauben“) –
+ * vorher fließen keine Daten an Google.
  */
 export function MapEmbed({ className }: { className?: string }) {
-  const [loaded, setLoaded] = useState(false)
+  const consent = useConsent()
+  const [loadedOnce, setLoadedOnce] = useState(false)
+  const loaded = consent.maps || loadedOnce
 
   return (
     <div className={cn("bg-tile relative aspect-[4/3] overflow-hidden rounded-[28px] md:aspect-[16/10]", className)}>
@@ -45,7 +49,7 @@ export function MapEmbed({ className }: { className?: string }) {
           <div className="relative flex flex-wrap justify-center gap-3">
             <button
               type="button"
-              onClick={() => setLoaded(true)}
+              onClick={() => setLoadedOnce(true)}
               className="bg-fg text-bg rounded-full px-5 py-2.5 text-[15px] font-medium transition-opacity hover:opacity-85"
             >
               Karte laden
@@ -59,9 +63,16 @@ export function MapEmbed({ className }: { className?: string }) {
               <Navigation className="size-4" aria-hidden /> Route planen
             </a>
           </div>
+          <button
+            type="button"
+            onClick={() => saveConsent({ maps: true })}
+            className="text-green-deep relative text-[13px] font-medium underline-offset-2 hover:underline"
+          >
+            Google Maps immer erlauben
+          </button>
           <p className="text-muted relative max-w-sm text-xs">
             Beim Laden der Karte werden Daten an Google übertragen. Mehr dazu in unserer{" "}
-            <Link to="/impressum#datenschutz" className="underline underline-offset-2">
+            <Link to="/datenschutz#google-maps" className="underline underline-offset-2">
               Datenschutzerklärung
             </Link>
             .

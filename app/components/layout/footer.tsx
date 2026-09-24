@@ -2,6 +2,7 @@ import { Link } from "react-router"
 import { classes } from "~/content/classes"
 import { site } from "~/content/site"
 import { Logo } from "../ui/logo"
+import { openConsentSettings } from "~/lib/consent"
 import { useLenis } from "./smooth-scroll"
 
 const columns: { title: string; links: [string, string][] }[] = [
@@ -22,7 +23,9 @@ const columns: { title: string; links: [string, string][] }[] = [
       ["Startseite", "/"],
       ["Team", "/team"],
       ["Anmeldung", "/anmeldung"],
-      ["Impressum & Datenschutz", "/impressum"],
+      ["Impressum", "/impressum"],
+      ["Datenschutz", "/datenschutz"],
+      ["AGB", "/agb"],
     ],
   },
 ]
@@ -96,9 +99,20 @@ export function Footer() {
 
         <div className="flex flex-col gap-2 border-t border-black/10 pt-6 sm:flex-row sm:justify-between">
           <p>Copyright © {new Date().getFullYear()} {site.name}. Alle Rechte vorbehalten.</p>
-          <Link to="/impressum" className="hover:text-ink">
-            Impressum & Datenschutz
-          </Link>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link to="/impressum" className="hover:text-ink">
+              Impressum
+            </Link>
+            <Link to="/datenschutz" className="hover:text-ink">
+              Datenschutz
+            </Link>
+            <Link to="/agb" className="hover:text-ink">
+              AGB
+            </Link>
+            <button type="button" onClick={openConsentSettings} className="hover:text-ink">
+              Cookie-Einstellungen
+            </button>
+          </div>
         </div>
       </div>
     </footer>

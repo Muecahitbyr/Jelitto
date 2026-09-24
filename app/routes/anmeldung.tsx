@@ -192,12 +192,19 @@ export default function AnmeldungPage() {
                     <input type="checkbox" required className="accent-[#88b018] mt-0.5 size-4 shrink-0" />
                     <span>
                       Ich habe die{" "}
-                      <Link to="/impressum#datenschutz" className="text-accent underline-offset-2 hover:underline">
+                      <Link to="/datenschutz#online-anmeldung" className="text-accent underline-offset-2 hover:underline">
                         Datenschutzerklärung
                       </Link>{" "}
                       gelesen und bin mit der Verarbeitung meiner Angaben zur Vorbereitung der Vertragsunterlagen einverstanden.
                     </span>
                   </label>
+                  <p className="text-muted text-[13px] sm:col-span-2">
+                    Für den Ausbildungsvertrag gelten unsere{" "}
+                    <Link to="/agb" className="text-accent underline-offset-2 hover:underline">
+                      Allgemeinen Geschäftsbedingungen
+                    </Link>
+                    .
+                  </p>
                   <div className="sm:col-span-2">
                     <button
                       type="submit"

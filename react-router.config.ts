@@ -4,7 +4,7 @@ import type { Config } from "@react-router/dev/config"
 import { classes } from "./app/content/classes"
 
 const SITE_URL = "https://fahrschule-jelitto.com"
-const pages = ["/", "/info", "/unterricht", "/team", "/klassen", "/preise", "/begleitetes-fahren", "/anmeldung", "/impressum", ...classes.map((c) => c.path)]
+const pages = ["/", "/info", "/unterricht", "/team", "/klassen", "/preise", "/begleitetes-fahren", "/anmeldung", "/impressum", "/datenschutz", "/agb", ...classes.map((c) => c.path)]
 
 export default {
   // Statische Website: jede Seite wird beim Build als fertiges HTML vorgerendert

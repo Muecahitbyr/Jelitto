@@ -2,6 +2,8 @@ import { motion, useReducedMotion } from "motion/react"
 import { useEffect, useRef } from "react"
 import { Outlet, useLocation, useNavigationType } from "react-router"
 import { easeOutExpo } from "~/lib/motion"
+import { ChatWidget } from "../assistant/chat-widget"
+import { ConsentBanner } from "../consent/consent-banner"
 import { Footer } from "./footer"
 import { Navbar } from "./navbar"
 import { SmoothScroll, useLenis } from "./smooth-scroll"
@@ -12,6 +14,8 @@ export default function SiteLayout() {
       <Navbar />
       <PageTransition />
       <Footer />
+      <ChatWidget />
+      <ConsentBanner />
     </SmoothScroll>
   )
 }

@@ -14,6 +14,8 @@ export default [
     route("preise", "routes/preise.tsx"),
     route("anmeldung", "routes/anmeldung.tsx"),
     route("impressum", "routes/impressum.tsx"),
+    route("datenschutz", "routes/datenschutz.tsx"),
+    route("agb", "routes/agb.tsx"),
     route("*", "routes/not-found.tsx"),
   ]),
 ] satisfies RouteConfig

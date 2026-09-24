@@ -64,6 +64,13 @@ Nach `npm run build` den **Inhalt von `build/client/`** auf den Webspace hochlad
 
 Das Formular unter `/anmeldung` öffnet derzeit eine vorausgefüllte E-Mail an die Fahrschule. Es funktioniert also ohne Server. Für einen direkten Versand kann `handleSubmit` in `app/routes/anmeldung.tsx` an einen Formular-Dienst (z. B. Formspree, Web3Forms) oder an die Fahrschulsoftware angebunden werden.
 
+## Rechtliches, Cookies & Einwilligung
+
+- Eigene Seiten: `/impressum`, `/datenschutz`, `/agb` (gemeinsamer Rahmen in `app/components/legal/legal-page.tsx`).
+- AGB und die Abschnitte zu den Betroffenenrechten stammen wörtlich aus der bisherigen Website (`app/content/legal.ts`).
+- Die Datenschutz-Abschnitte zu Hosting, Cookies, Schriftarten, Google Maps, Online-Anmeldung, Kontakt, Assistent und Links beschreiben die neue Website und wurden neu formuliert (`app/routes/datenschutz.tsx`). **Vor dem Livegang juristisch prüfen lassen** und den Hosting-Abschnitt anpassen, falls nicht Vercel.
+- Die Website setzt keine eigenen Cookies. Der Einwilligungs-Banner (`app/components/consent/consent-banner.tsx`) fragt nur nach Google Maps; die Auswahl liegt im localStorage (`jelitto-consent-v1`) und lässt sich über „Cookie-Einstellungen“ im Footer ändern. Kommen später weitere externe Dienste dazu (z. B. Analyse), müssen sie dort und in der Datenschutzerklärung ergänzt werden.
+
 ## Google Maps
 
-Die Karte nutzt eine 2-Klick-Lösung: Google Maps wird erst geladen, wenn Besucher auf „Karte laden“ klicken.
+Google Maps wird nur mit Einwilligung geladen: automatisch, wenn in den Cookie-Einstellungen erlaubt, sonst erst nach Klick auf „Karte laden“.
