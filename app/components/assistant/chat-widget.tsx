@@ -1,15 +1,16 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import { ArrowUp, MessageCircle, X } from "lucide-react"
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { Check, MessageCircle, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useLocation } from "react-router"
-import { answer, greeting, suggestions, type Answer, type AnswerLink } from "~/content/assistant"
+import { answer, greeting, questions, type Answer, type AnswerLink } from "~/content/assistant"
 import { cn } from "~/lib/cn"
 import { easeOutExpo } from "~/lib/motion"
 
 type Message = { id: number; from: "bot"; answer: Answer } | { id: number; from: "user"; text: string }
 
 /**
- * Fahrschul-Assistent: beantwortet häufige Fragen direkt aus den Inhalten der Website.
+ * Fahrschul-Assistent: Besucher tippen auf eine der vorgefertigten Fragen, die Antwort
+ * kommt direkt aus den Inhalten der Website. Alle Fragen sind gleichzeitig sichtbar.
  * Läuft komplett im Browser – es werden keine Nachrichten an externe Dienste gesendet.
  */
 export function ChatWidget() {
@@ -17,9 +18,7 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([{ id: 0, from: "bot", answer: greeting }])
   const [asked, setAsked] = useState<string[]>([])
   const [typing, setTyping] = useState(false)
-  const [input, setInput] = useState("")
   const listRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const nextId = useRef(1)
   const reduce = useReducedMotion()
   const location = useLocation()
@@ -37,31 +36,20 @@ export function ChatWidget() {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false)
     window.addEventListener("keydown", onKey)
-    // Auf Touch-Geräten nicht sofort die Tastatur öffnen
-    if (window.matchMedia("(pointer: fine)").matches) setTimeout(() => inputRef.current?.focus(), 250)
     return () => window.removeEventListener("keydown", onKey)
   }, [open])
 
   const ask = (question: string) => {
-    const q = question.trim()
-    if (!q || typing) return
-    setMessages((m) => [...m, { id: nextId.current++, from: "user", text: q }])
-    setAsked((a) => [...a, q])
-    setInput("")
+    if (typing) return
+    setMessages((m) => [...m, { id: nextId.current++, from: "user", text: question }])
+    setAsked((a) => (a.includes(question) ? a : [...a, question]))
     setTyping(true)
-    const delay = reduce ? 0 : 550 + Math.min(700, q.length * 12)
+    const delay = reduce ? 0 : 650
     setTimeout(() => {
-      setMessages((m) => [...m, { id: nextId.current++, from: "bot", answer: answer(q) }])
+      setMessages((m) => [...m, { id: nextId.current++, from: "bot", answer: answer(question) }])
       setTyping(false)
     }, delay)
   }
-
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    ask(input)
-  }
-
-  const openSuggestions = suggestions.filter((s) => !asked.includes(s))
 
   return (
     <>
@@ -86,7 +74,7 @@ export function ChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Chatfenster */}
+      {/* Chatfenster (liegt über dem Cookie-Banner z-46 und dem Knopf z-47) */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -98,7 +86,7 @@ export function ChatWidget() {
             exit={{ opacity: 0, y: 24, scale: 0.97, transition: { duration: 0.25 } }}
             transition={{ duration: 0.5, ease: easeOutExpo }}
             style={{ transformOrigin: "bottom right" }}
-            className="tone-white fixed inset-x-2 bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-[48] flex h-[min(78svh,640px)] flex-col overflow-hidden rounded-[28px] border border-black/[0.06] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.35)] md:inset-x-auto md:right-6 md:bottom-6 md:h-[min(640px,82vh)] md:w-[400px]"
+            className="tone-white fixed inset-x-2 top-[max(4.5rem,env(safe-area-inset-top))] bottom-[max(0.5rem,env(safe-area-inset-bottom))] [@media(max-height:640px)]:top-[max(0.5rem,env(safe-area-inset-top))] z-[48] flex flex-col overflow-hidden rounded-[28px] border border-black/[0.06] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.35)] md:inset-x-auto md:top-auto md:right-6 md:bottom-6 md:h-[min(720px,86vh)] md:w-[420px]"
           >
             {/* Kopf */}
             <div className="flex items-center gap-3 border-b border-black/[0.06] px-4 py-3.5">
@@ -122,7 +110,7 @@ export function ChatWidget() {
             </div>
 
             {/* Verlauf */}
-            <div ref={listRef} data-lenis-prevent className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4" aria-live="polite">
+            <div ref={listRef} data-lenis-prevent className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4" aria-live="polite">
               {messages.map((m) =>
                 m.from === "user" ? (
                   <motion.div
@@ -181,48 +169,31 @@ export function ChatWidget() {
               )}
             </div>
 
-            {/* Vorgefertigte Fragen */}
-            {openSuggestions.length > 0 && (
-              <div data-lenis-prevent className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-2">
-                {openSuggestions.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => ask(s)}
-                    disabled={typing}
-                    className="text-green-deep bg-green-soft hover:bg-green/25 shrink-0 rounded-full px-3.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors disabled:opacity-50"
-                  >
-                    {s}
-                  </button>
-                ))}
+            {/* Alle Fragen – immer vollständig sichtbar */}
+            <div className="border-t border-black/[0.06] bg-[#fafafa] px-3 pt-3 pb-3">
+              <p className="text-muted mb-2 px-1 text-[12px] font-medium [@media(max-height:640px)]:hidden">Häufige Fragen – einfach antippen</p>
+              <div className="flex flex-wrap gap-1.5">
+                {questions.map((q) => {
+                  const done = asked.includes(q.question)
+                  return (
+                    <button
+                      key={q.label}
+                      type="button"
+                      onClick={() => ask(q.question)}
+                      disabled={typing}
+                      className={cn(
+                        "inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors disabled:opacity-60 [@media(max-height:640px)]:px-2.5 [@media(max-height:640px)]:py-1 [@media(max-height:640px)]:text-[12px]",
+                        done ? "bg-tile text-muted ring-1 ring-black/[0.06]" : "bg-green-soft text-green-deep hover:bg-green/25",
+                      )}
+                    >
+                      {done && <Check className="size-3.5" aria-hidden />}
+                      {q.label}
+                    </button>
+                  )
+                })}
               </div>
-            )}
-
-            {/* Eingabe */}
-            <form onSubmit={onSubmit} className="flex items-center gap-2 border-t border-black/[0.06] px-3 py-3">
-              <label htmlFor="assistant-input" className="sr-only">
-                Deine Frage
-              </label>
-              <input
-                ref={inputRef}
-                id="assistant-input"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Frag mich etwas …"
-                autoComplete="off"
-                enterKeyHint="send"
-                className="bg-tile min-w-0 flex-1 rounded-full px-4 py-3 text-[16px] outline-none focus:ring-2 focus:ring-[#88b018]/50"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || typing}
-                className="bg-green grid size-11 shrink-0 place-items-center rounded-full text-[#0f1a00] transition-opacity disabled:opacity-40"
-                aria-label="Frage senden"
-              >
-                <ArrowUp className="size-5" aria-hidden />
-              </button>
-            </form>
-            <p className="text-muted px-4 pb-3 text-center text-[11px]">Antworten basieren auf den Angaben dieser Website.</p>
+              <p className="text-muted mt-2.5 text-center text-[11px] [@media(max-height:640px)]:hidden">Antworten basieren auf den Angaben dieser Website.</p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

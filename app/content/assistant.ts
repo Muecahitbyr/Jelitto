@@ -14,22 +14,30 @@ import { site } from "./site"
 export type AnswerLink = { label: string; to?: string; href?: string }
 export type Answer = { text: string[]; bullets?: string[]; links?: AnswerLink[] }
 
-/** Vorgefertigte Fragen zum Antippen */
-export const suggestions = [
-  "Was kostet der Führerschein Klasse B ungefähr?",
-  "Wann sind die Öffnungszeiten?",
-  "Wann ist Theorieunterricht?",
-  "Wann sind die Bürozeiten?",
-  "Wie melde ich mich an?",
-  "Welche Unterlagen brauche ich?",
-  "Ab wann darf ich den Führerschein machen?",
-  "Wo finde ich euch?",
+/**
+ * Fragen zum Antippen – alle gleichzeitig im Chat sichtbar.
+ * `label` steht auf dem Knopf, `question` erscheint als Nachricht und wird beantwortet.
+ */
+export const questions: { label: string; question: string }[] = [
+  { label: "Kosten Auto (B)", question: "Was kostet der Führerschein Klasse B ungefähr?" },
+  { label: "Kosten Motorrad (A)", question: "Was kostet der Motorradführerschein Klasse A?" },
+  { label: "Öffnungszeiten", question: "Wann sind die Öffnungszeiten?" },
+  { label: "Bürozeiten", question: "Wann sind die Bürozeiten?" },
+  { label: "Theorieunterricht", question: "Wann ist Theorieunterricht?" },
+  { label: "Anmeldung", question: "Wie melde ich mich an?" },
+  { label: "Unterlagen", question: "Welche Unterlagen brauche ich?" },
+  { label: "Mindestalter", question: "Ab wann darf ich den Führerschein machen?" },
+  { label: "Sonderfahrten", question: "Welche Sonderfahrten muss ich machen?" },
+  { label: "Begleitetes Fahren ab 17", question: "Was ist begleitetes Fahren ab 17?" },
+  { label: "Bezahlung", question: "Wie kann ich bezahlen?" },
+  { label: "Anfahrt", question: "Wo finde ich euch?" },
+  { label: "Kontakt", question: "Wie kann ich euch erreichen?" },
 ]
 
 export const greeting: Answer = {
   text: [
     "Hallo! 👋 Ich bin der Assistent der Fahrschule Jelitto.",
-    "Frag mich zu Preisen, Öffnungszeiten, Theorieunterricht, Anmeldung oder den Führerscheinklassen – oder tippe auf eine der Fragen unten.",
+    "Tippe unten auf eine Frage – ich antworte sofort.",
   ],
 }
 
