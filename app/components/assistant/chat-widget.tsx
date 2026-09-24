@@ -76,7 +76,7 @@ export function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
-            className="bg-green fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex items-center gap-2 rounded-full p-4 text-[15px] font-semibold text-[#0f1a00] shadow-[0_12px_32px_-10px_rgb(77_115_9/0.7)] transition-transform hover:scale-[1.04] active:scale-95 md:right-6 md:bottom-6 md:px-5 md:py-3.5"
+            className="bg-green fixed right-4 bottom-[calc(max(1rem,env(safe-area-inset-bottom))+var(--consent-offset,0px))] z-[47] inline-flex items-center gap-2 rounded-full p-4 text-[15px] font-semibold text-[#0f1a00] shadow-[0_12px_32px_-10px_rgb(77_115_9/0.7)] transition-[bottom,transform] duration-500 ease-[var(--ease-out-expo)] hover:scale-[1.04] active:scale-95 md:right-6 md:bottom-6 md:px-5 md:py-3.5"
             aria-label="Fragen an den Fahrschul-Assistenten"
             aria-haspopup="dialog"
           >
@@ -98,7 +98,7 @@ export function ChatWidget() {
             exit={{ opacity: 0, y: 24, scale: 0.97, transition: { duration: 0.25 } }}
             transition={{ duration: 0.5, ease: easeOutExpo }}
             style={{ transformOrigin: "bottom right" }}
-            className="tone-white fixed inset-x-2 bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-[45] flex h-[min(78svh,640px)] flex-col overflow-hidden rounded-[28px] border border-black/[0.06] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.35)] md:inset-x-auto md:right-6 md:bottom-6 md:h-[min(640px,82vh)] md:w-[400px]"
+            className="tone-white fixed inset-x-2 bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-[48] flex h-[min(78svh,640px)] flex-col overflow-hidden rounded-[28px] border border-black/[0.06] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.35)] md:inset-x-auto md:right-6 md:bottom-6 md:h-[min(640px,82vh)] md:w-[400px]"
           >
             {/* Kopf */}
             <div className="flex items-center gap-3 border-b border-black/[0.06] px-4 py-3.5">

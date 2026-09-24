@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { ShieldCheck } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router"
 import { onOpenConsentSettings, saveConsent, useConsent } from "~/lib/consent"
 import { cn } from "~/lib/cn"
@@ -34,6 +34,28 @@ export function ConsentBanner() {
 
   const open = mounted && (!consent.decided || forced)
 
+  // Auf dem Handy liegt der Banner über dem Chat-Knopf. Seine Höhe wird als CSS-Variable
+  // bereitgestellt, damit der Chat-Knopf darüber ausweichen kann (siehe chat-widget.tsx).
+  const panelRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const root = document.documentElement
+    const el = panelRef.current
+    if (!open || !el) {
+      root.style.removeProperty("--consent-offset")
+      return
+    }
+    const update = () => root.style.setProperty("--consent-offset", window.innerWidth < 768 ? `${el.offsetHeight + 12}px` : "0px")
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    window.addEventListener("resize", update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener("resize", update)
+      root.style.removeProperty("--consent-offset")
+    }
+  }, [open, settings])
+
   const decide = (allowMaps: boolean) => {
     saveConsent({ maps: allowMaps })
     setForced(false)
@@ -45,6 +67,7 @@ export function ConsentBanner() {
       {open && (
         <motion.div
           key="consent"
+          ref={panelRef}
           role="dialog"
           aria-labelledby="consent-title"
           aria-describedby="consent-text"
