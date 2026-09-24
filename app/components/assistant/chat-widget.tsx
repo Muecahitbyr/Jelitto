@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import { Check, MessageCircle, X } from "lucide-react"
+import { MessageCircle, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Link, useLocation } from "react-router"
 import { answer, greeting, questions, type Answer, type AnswerLink } from "~/content/assistant"
@@ -16,7 +16,6 @@ type Message = { id: number; from: "bot"; answer: Answer } | { id: number; from:
 export function ChatWidget() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([{ id: 0, from: "bot", answer: greeting }])
-  const [asked, setAsked] = useState<string[]>([])
   const [typing, setTyping] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const nextId = useRef(1)
@@ -42,7 +41,6 @@ export function ChatWidget() {
   const ask = (question: string) => {
     if (typing) return
     setMessages((m) => [...m, { id: nextId.current++, from: "user", text: question }])
-    setAsked((a) => (a.includes(question) ? a : [...a, question]))
     setTyping(true)
     const delay = reduce ? 0 : 650
     setTimeout(() => {
@@ -173,24 +171,17 @@ export function ChatWidget() {
             <div className="border-t border-black/[0.06] bg-[#fafafa] px-3 pt-3 pb-3">
               <p className="text-muted mb-2 px-1 text-[12px] font-medium [@media(max-height:640px)]:hidden">Häufige Fragen – einfach antippen</p>
               <div className="flex flex-wrap gap-1.5">
-                {questions.map((q) => {
-                  const done = asked.includes(q.question)
-                  return (
-                    <button
-                      key={q.label}
-                      type="button"
-                      onClick={() => ask(q.question)}
-                      disabled={typing}
-                      className={cn(
-                        "inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors disabled:opacity-60 [@media(max-height:640px)]:px-2.5 [@media(max-height:640px)]:py-1 [@media(max-height:640px)]:text-[12px]",
-                        done ? "bg-tile text-muted ring-1 ring-black/[0.06]" : "bg-green-soft text-green-deep hover:bg-green/25",
-                      )}
-                    >
-                      {done && <Check className="size-3.5" aria-hidden />}
-                      {q.label}
-                    </button>
-                  )
-                })}
+                {questions.map((q) => (
+                  <button
+                    key={q.label}
+                    type="button"
+                    onClick={() => ask(q.question)}
+                    disabled={typing}
+                    className="bg-green-soft text-green-deep hover:bg-green/25 inline-flex items-center rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors active:scale-[0.97] disabled:opacity-60 [@media(max-height:640px)]:px-2.5 [@media(max-height:640px)]:py-1 [@media(max-height:640px)]:text-[12px]"
+                  >
+                    {q.label}
+                  </button>
+                ))}
               </div>
               <p className="text-muted mt-2.5 text-center text-[11px] [@media(max-height:640px)]:hidden">Antworten basieren auf den Angaben dieser Website.</p>
             </div>
